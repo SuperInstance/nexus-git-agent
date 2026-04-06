@@ -1,0 +1,10 @@
+{
+  "name": "nexus-git-agent",
+  "displayName": "Nexus Bridge",
+  "type": "cocapn-vessel",
+  "category": "infrastructure",
+  "description": "Cloud-side brain for edge intelligence fleets. INCREMENTS trust, reflex compiler, fleet state, telemetry bridge.",
+  "capabilities": ["trust-engine", "reflex-compiler", "fleet-state", "telemetry-bridge", "edge-bridge"],
+  "endpoints": { "health": "/health", "bridge": "/api/bridge", "fleet": "/api/fleet", "trust": "/api/trust" },
+  "deployment": { "url": "https://nexus-git-agent.casey-digennaro.workers.dev" }
+}

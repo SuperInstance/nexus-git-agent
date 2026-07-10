@@ -24,11 +24,11 @@ You didn't build custom hardware to spend weeks writing heartbeat and trust logi
 - **Reflex Compiler:** Pushes simple behavior rules to nodes automatically (e.g., "retry sensor read twice").
 - **Partition-Tolerant Fleet State:** Maintains a consistent view of connected devices, even during partial network outages.
 - **Telemetry Bridge:** Translates between the Cocapn fleet protocol and your hardware's native format.
-- **Optional LLM Reasoning:** DeepSeek integration resolves ambiguous edge cases, like conflicting sensor readings. You can disable this.
+- **Optional LLM Reasoning:** DeepSeek integration resolves ambiguous edge cases, like conflicting sensor readings. You can disable this by simply not configuring the `DEEPSEEK_API_KEY` secret — the agent skips LLM reasoning gracefully (no errors).
 - Cold starts under 50ms. No npm dependencies.
 
 ## One Honest Limitation
-The agent uses Cloudflare Workers KV for state storage. Your active device registry is limited to approximately 1000 devices per instance under the standard KV usage tier.
+The agent uses Cloudflare Workers KV for state storage. The effective number of devices your deployment can actively manage depends on your KV usage plan's write rate limits. Under the standard (paid) tier with a typical heartbeat interval of 1 minute, you can expect to support around 1000 devices before encountering write throughput constraints. Always consult Cloudflare's [KV limits documentation](https://developers.cloudflare.com/workers/platform/limits/#kv-limits) for your specific plan.
 
 ## License
 MIT. Do whatever you want with this code.

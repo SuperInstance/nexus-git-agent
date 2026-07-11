@@ -30,6 +30,11 @@ This agent provides fleet coordination without requiring custom heartbeat and tr
 ## One Honest Limitation
 The agent uses Cloudflare Workers KV for state storage. The effective number of devices your deployment can actively manage depends on your KV usage plan's write rate limits. Under the standard (paid) tier with a typical heartbeat interval of 1 minute, you can expect to support around 1000 devices before encountering write throughput constraints. Always consult Cloudflare's [KV limits documentation](https://developers.cloudflare.com/workers/platform/limits/#kv-limits) for your specific plan.
 
+## Related Repos
+- **[nexus-edge-runtime](https://github.com/SuperInstance/nexus-edge-runtime)** — a full edge runtime (bytecode VM, wire protocol, 4-tier safety validation, sensor fusion) that includes its own trust-engine and fleet-coordination modules; a heavier-weight alternative if you need more than a lightweight Worker-hosted trust scorer.
+- **[fleet-conductor](https://github.com/SuperInstance/fleet-conductor)** — an in-memory agent-state orchestration core (FSM, conservation guard, reconcile loop); useful if your fleet needs richer per-agent state management than this repo's trust-score model covers.
+- **[vessel-bridge](https://github.com/SuperInstance/vessel-bridge)** — a thin ESP32→Jetson→Cloud hardware HAL; a natural on-device counterpart if you need firmware-level heartbeat/telemetry plumbing feeding into this agent's Worker.
+
 ## License
 MIT. Do whatever you want with this code.
 

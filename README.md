@@ -5,8 +5,8 @@ You have edge devices deployed. Some fail. Some lie. This agent notices, calcula
 **Live Instance:** [https://nexus-git-agent.casey-digennaro.workers.dev](https://nexus-git-agent.casey-digennaro.workers.dev)
 Open source | MIT Licensed | Runs on Cloudflare Workers | Zero dependencies
 
-## Why This Exists
-You didn't build custom hardware to spend weeks writing heartbeat and trust logic. This agent handles fleet coordination so you don't have to.
+## Purpose
+This agent provides fleet coordination without requiring custom heartbeat and trust logic. Instead of writing those components from scratch, you deploy this worker and point your devices at it.
 
 ## Quick Start
 1.  **Fork** this repository. Deployment starts with your own copy.

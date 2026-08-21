@@ -17,6 +17,10 @@ function json(data: any, status = 200) {
   });
 }
 
+interface DeepSeekResponse {
+  choices?: { message?: { content?: string } }[];
+}
+
 async function llm(prompt: string, key: string, system: string): Promise<string> {
   const r = await fetch(DS_URL, {
     method: 'POST',
@@ -24,7 +28,7 @@ async function llm(prompt: string, key: string, system: string): Promise<string>
     body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }], max_tokens: 1000, temperature: 0.3 }),
   });
   if (!r.ok) throw new Error('LLM ' + r.status);
-  const d = await r.json();
+  const d = await r.json() as DeepSeekResponse;
   return d.choices?.[0]?.message?.content || '';
 }
 
@@ -35,6 +39,25 @@ interface TrustEvent {
   type: string;
   severity: number; // 1-5
   timestamp: number;
+}
+
+interface TelemetryEvent {
+  type?: string;
+  severity?: number;
+}
+
+interface BridgeRequestBody {
+  nodeId?: string;
+  telemetry?: TelemetryEvent | TelemetryEvent[];
+  intent?: string;
+  type?: string;
+  location?: unknown;
+}
+
+interface TrustRequestBody {
+  nodeId?: string;
+  type?: string;
+  severity?: number;
 }
 
 async function getTrustScore(nodeId: string, kv: KVNamespace): Promise<number> {
@@ -114,7 +137,7 @@ export default {
 
     // Bridge: receive telemetry, return reflex commands
     if (path === '/api/bridge' && request.method === 'POST') {
-      const body = await request.json();
+      const body = await request.json() as BridgeRequestBody;
       const { nodeId, telemetry, intent } = body;
       if (!nodeId) return json({ error: 'nodeId required' }, 400);
 
@@ -154,7 +177,7 @@ export default {
 
     // Trust scoring
     if (path === '/api/trust' && request.method === 'POST') {
-      const { nodeId, type, severity } = await request.json();
+      const { nodeId, type, severity } = await request.json() as TrustRequestBody;
       if (!nodeId) return json({ error: 'nodeId required' }, 400);
       const score = await updateTrust({ nodeId, type: type || 'GOOD', severity: severity || 1, timestamp: Date.now() }, env.NEXUS_KV);
       return json({ nodeId, score, type });
@@ -199,8 +222,7 @@ export default {
       + '</div>'
       + '<div class="fleet"><a href="https://the-fleet.casey-digennaro.workers.dev">&#x2693; The Fleet</a> &middot; <a href="https://cocapn.ai">Cocapn</a> &middot; <a href="https://github.com/Lucineer/nexus-runtime">Nexus Runtime</a></div>'
       + '</body></html>',
-      { headers: { 'Content-Type': 'text/html', 'Content-Security-Policy': CSP;charset=utf-8' } },
-      'X-Frame-Options': 'DENY',
+      { headers: { 'Content-Type': 'text/html;charset=utf-8', 'Content-Security-Policy': CSP, 'X-Frame-Options': 'DENY' } },
     );
   },
 };

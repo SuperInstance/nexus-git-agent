@@ -5,8 +5,8 @@ You have edge devices deployed. Some fail. Some lie. This agent notices, calcula
 **Live Instance:** [https://nexus-git-agent.casey-digennaro.workers.dev](https://nexus-git-agent.casey-digennaro.workers.dev)
 Open source | MIT Licensed | Runs on Cloudflare Workers | Zero dependencies
 
-## Why This Exists
-You didn't build custom hardware to spend weeks writing heartbeat and trust logic. This agent handles fleet coordination so you don't have to.
+## Purpose
+This agent provides fleet coordination without requiring custom heartbeat and trust logic. Instead of writing those components from scratch, you deploy this worker and point your devices at it.
 
 ## Quick Start
 1.  **Fork** this repository. Deployment starts with your own copy.
@@ -29,6 +29,11 @@ You didn't build custom hardware to spend weeks writing heartbeat and trust logi
 
 ## One Honest Limitation
 The agent uses Cloudflare Workers KV for state storage. The effective number of devices your deployment can actively manage depends on your KV usage plan's write rate limits. Under the standard (paid) tier with a typical heartbeat interval of 1 minute, you can expect to support around 1000 devices before encountering write throughput constraints. Always consult Cloudflare's [KV limits documentation](https://developers.cloudflare.com/workers/platform/limits/#kv-limits) for your specific plan.
+
+## Related Repos
+- **[nexus-edge-runtime](https://github.com/SuperInstance/nexus-edge-runtime)** — a full edge runtime (bytecode VM, wire protocol, 4-tier safety validation, sensor fusion) that includes its own trust-engine and fleet-coordination modules; a heavier-weight alternative if you need more than a lightweight Worker-hosted trust scorer.
+- **[fleet-conductor](https://github.com/SuperInstance/fleet-conductor)** — an in-memory agent-state orchestration core (FSM, conservation guard, reconcile loop); useful if your fleet needs richer per-agent state management than this repo's trust-score model covers.
+- **[vessel-bridge](https://github.com/SuperInstance/vessel-bridge)** — a thin ESP32→Jetson→Cloud hardware HAL; a natural on-device counterpart if you need firmware-level heartbeat/telemetry plumbing feeding into this agent's Worker.
 
 ## License
 MIT. Do whatever you want with this code.
